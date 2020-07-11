@@ -1,0 +1,3 @@
+hostname,hostIP,datacentre,network,function
+scottslab,192.168.1.100,dc1,core,edgeLTM
+scottslab,192.168.1.99,dc2,core,edgeLTM
