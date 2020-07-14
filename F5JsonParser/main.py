@@ -1,4 +1,5 @@
 #is using python2.6 without any extra packages
+import pprint
 import sys
 import csv
 import json
@@ -35,19 +36,28 @@ def get_hosts(file):
                     d = dict(zip(headers,row))
                     if hostFilterVal in (d[hostFilterCol]):
                         hostsRequired.append(d)
-    #remove duplicates needs to be done
-    return hostsRequired
+    #remove duplicates needs to be done better but works for now
+    hostsRequiredNoDuplicates = []
+    for i in range(len(hostsRequired)):
+        if hostsRequired[i] not in hostsRequired[i + 1:]:
+            hostsRequiredNoDuplicates.append(hostsRequired[i])
+
+    return hostsRequiredNoDuplicates
+
 
 def get_data(hosts):
     #carry out api checks against filtered host
     requestedOutput = []
+    outputSelectors = []
+    path = raw_input('Please enter the api path:\n/mgmt/tm/')
+
     for host in hosts:
-        url = 'https://'+(host['hostIP'])+'/mgmt/tm/net/self'
+        url = 'https://'+(host['hostIP'])+'/mgmt/tm/'+path
         auth = HTTPBasicAuth(user,password)
         r = requests.get(url, verify=False, auth=auth)
         data = json.loads(r.text)
         for item in data['items']:
-            outputItem = host['hostname'],host['hostIP'],str(item['name']),str(item['allowService'])
+            outputItem = host['hostname'],host['hostIP'],item['name'],item['allowService']
             requestedOutput.append(outputItem)
     return requestedOutput
 
@@ -60,5 +70,6 @@ def write_data_to_csv(output):
 user = raw_input('Enter Username: ')
 password = raw_input('Enter Password: ')
 hosts = get_hosts('/var/tmp/hostfile.csv')
-print(get_data(hosts))
-write_data_to_csv(get_data(hosts))
+myData = get_data(hosts)
+pprint.pprint(myData)
+write_data_to_csv(myData)
