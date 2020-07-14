@@ -48,7 +48,12 @@ def get_hosts(file):
 def get_data(hosts):
     #carry out api checks against filtered host
     requestedOutput = []
-    outputSelectors = []
+    outputSelectors = raw_input('Please enter a value that should be recorded on the API')
+    #try split using space as delimiter to get two vals for col and val. If split cant be done assumed user entered done or any
+    try:
+        outputSelectors.split()
+    except:
+        hostfilterVal = None
     path = raw_input('Please enter the api path:\n/mgmt/tm/')
 
     for host in hosts:
@@ -56,8 +61,11 @@ def get_data(hosts):
         auth = HTTPBasicAuth(user,password)
         r = requests.get(url, verify=False, auth=auth)
         data = json.loads(r.text)
+        #this is broken and needs fixed
         for item in data['items']:
-            outputItem = host['hostname'],host['hostIP'],item['name'],item['allowService']
+            outputItem = host['hostname'],host['hostIP']
+                for selector in outputSelectors:
+                    outputItem + item[selector]
             requestedOutput.append(outputItem)
     return requestedOutput
 
