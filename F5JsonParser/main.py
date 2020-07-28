@@ -48,24 +48,25 @@ def get_hosts(file):
 def get_data(hosts):
     #carry out api checks against filtered host
     requestedOutput = []
-    outputSelectors = raw_input('Please enter a value that should be recorded on the API')
-    #try split using space as delimiter to get two vals for col and val. If split cant be done assumed user entered done or any
-    try:
-        outputSelectors.split()
-    except:
-        hostfilterVal = None
+    outputSelectors = []
+    outputSelectors = raw_input('Please enter a value that should be recorded on the API or enter all if all items are to be printed:').split()
     path = raw_input('Please enter the api path:\n/mgmt/tm/')
 
+    #add headers
+    requestedOutput.append(('hostname','hostIP') + tuple(outputSelectors))
+
     for host in hosts:
+        #get json from hosts
         url = 'https://'+(host['hostIP'])+'/mgmt/tm/'+path
         auth = HTTPBasicAuth(user,password)
         r = requests.get(url, verify=False, auth=auth)
         data = json.loads(r.text)
-        #this is broken and needs fixed
+
+        #filter data from hosts
         for item in data['items']:
             outputItem = host['hostname'],host['hostIP']
-                for selector in outputSelectors:
-                    outputItem + item[selector]
+            for selector in outputSelectors:
+                outputItem += (item[selector],)
             requestedOutput.append(outputItem)
     return requestedOutput
 
@@ -79,5 +80,15 @@ user = raw_input('Enter Username: ')
 password = raw_input('Enter Password: ')
 hosts = get_hosts('/var/tmp/hostfile.csv')
 myData = get_data(hosts)
-pprint.pprint(myData)
-write_data_to_csv(myData)
+
+export = None
+
+while export not in ('terminal','csv','both'):
+    export = raw_input('Do you want to print to terminal, csv or both?\n')
+    if export == 'terminal':
+        pprint.pprint(myData)
+    elif export == 'csv':
+        write_data_to_csv(myData)
+    elif export == 'both':
+        write_data_to_csv(myData)
+        pprint.pprint(myData)
