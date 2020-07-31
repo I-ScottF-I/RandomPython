@@ -1,2 +1,2 @@
 # RandomPython
-Repo for python experimentation
+Repo for small python projects
