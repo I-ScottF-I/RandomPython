@@ -13,9 +13,24 @@ def parse_csv(file):
             rules.append(row)
     return rules
 
+def F5_output(rules):
+    outputCommands = []
+    outputCommands.append('create security firewall rule-list <rule-list> <rule-list>')
+    outputCommands.append('modify security firewall policy <Policy> rules add { <rule-list> { rule-list <rule-list> place-after last } <rule-list> { rule-list <rule-list> place-after last } }')
+    for item in rules: 
+        outputCommands.append('modify security firewall rule-list <rule-list> rules add { <rule name> { action accept-decisively ip-protocol '+item[2]+' description \'CHANGE NUMBER\' log yes source { addresses add { '+item[0]+'} VLANs add { <VLAN> } } destination { addresses add { '+item[1]+' } ports add { '+item[3]+' } } place-after last } }')
+    return outputCommands
+
+#def PA_Output(input):
+#    for item in input:
+
+def writeToTxt(commands,device):
+    #write data out to csv file
+    with open( device+' commands.txt','w') as out:
+        for command in commands:
+            out.write(command+'\n')
+
 file = 'ExampleInput.csv'
-
-#def print_F5_Ouput
-
 output = parse_csv(file)
-print(output)
+writeToTxt(F5_output(output),'f5')
+#writeToTxt(PA_Output(output)))
