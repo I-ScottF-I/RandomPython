@@ -18,4 +18,4 @@ file = 'ExampleInput.csv'
 #def print_F5_Ouput
 
 output = parse_csv(file)
-pprint.pprint(output)
+print(output)
