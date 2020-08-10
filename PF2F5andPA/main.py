@@ -24,22 +24,23 @@ def F5_output(rules):
 def PA_Output(rules):
     outputCommands = []
     for item in rules:
-        outputCommands.append('set  rulebase security rules <rule name> profile-setting profiles virus default')
-        outputCommands.append('set  rulebase security rules <rule name> profile-setting profiles spyware default')
-        outputCommands.append('set  rulebase security rules <rule name> profile-setting profiles vulnerability default')
-        outputCommands.append('set  rulebase security rules <rule name> profile-setting profiles wildfire-analysis default')
-        outputCommands.append('set  rulebase security rules <rule name> to «DEST_ZONE»')
-        outputCommands.append('set  rulebase security rules <rule name> from «SRC_ZONE»')
-        outputCommands.append('set  rulebase security rules <rule name> source “[+item[0]+]”')
-        outputCommands.append('set  rulebase security rules <rule name> destination “[+item[1]+]”')
-        outputCommands.append('set  rulebase security rules <rule name> source-user any')
-        outputCommands.append('set  rulebase security rules <rule name> category any')
-        outputCommands.append('set  rulebase security rules <rule name> application any')
-        outputCommands.append('set  rulebase security rules <rule name> service “service”')
-        outputCommands.append('set  rulebase security rules <rule name> hip-profiles any')
-        outputCommands.append('set  rulebase security rules <rule name> action allow')
-        outputCommands.append('set  rulebase security rules <rule name> disabled no')
-
+        outputCommands.append('set rulebase security rules <rule name> profile-setting profiles virus default')
+        outputCommands.append('set rulebase security rules <rule name> profile-setting profiles spyware default')
+        outputCommands.append('set rulebase security rules <rule name> profile-setting profiles vulnerability default')
+        outputCommands.append('set rulebase security rules <rule name> profile-setting profiles wildfire-analysis default')
+        outputCommands.append('set rulebase security rules <rule name> to «DEST_ZONE»')
+        outputCommands.append('set rulebase security rules <rule name> from «SRC_ZONE»')
+        outputCommands.append('set rulebase security rules <rule name> source “['+item[0]+']”')
+        outputCommands.append('set rulebase security rules <rule name> destination “['+item[1]+']”')
+        outputCommands.append('set rulebase security rules <rule name> source-user any')
+        outputCommands.append('set rulebase security rules <rule name> category any')
+        outputCommands.append('set rulebase security rules <rule name> application any')
+        outputCommands.append('set rulebase security rules <rule name> service “service”') #this will be difficult
+        outputCommands.append('set rulebase security rules <rule name> hip-profiles any')
+        outputCommands.append('set rulebase security rules <rule name> action allow')
+        outputCommands.append('set rulebase security rules <rule name> disabled no')
+        outputCommands.append('\n')
+    return outputCommands
 
 def writeToTxt(commands,device):
     #write data out to csv file
@@ -50,4 +51,4 @@ def writeToTxt(commands,device):
 file = 'ExampleInput.csv'
 output = parse_csv(file)
 writeToTxt(F5_output(output),'f5')
-writeToTxt(PA_Output(output)))
+writeToTxt(PA_Output(output),'PA')
