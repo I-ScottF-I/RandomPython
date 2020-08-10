@@ -50,5 +50,5 @@ def writeToTxt(commands,device):
 
 file = 'ExampleInput.csv'
 output = parse_csv(file)
-writeToTxt(F5_output(output),'f5')
+writeToTxt(F5_output(output),'f5')#
 writeToTxt(PA_Output(output),'PA')
